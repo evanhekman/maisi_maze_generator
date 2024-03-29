@@ -42,7 +42,7 @@ def purify_maze(maze):
 
 def display_maze(maze):
 	# Convert maze to a numpy array for visualization
-    maze_array = np.array([[1 if cell == '1' else 0 for cell in row] for row in maze])
+    maze_array = np.array([[1 if cell == 'w' else 0 for cell in row] for row in maze])
 
     # Plot the maze
     plt.imshow(maze_array, cmap=plt.cm.binary)
@@ -286,7 +286,7 @@ def generate_maze(width, height):
 for i in range(0, 1):
      with open(f"maze{i}.txt", "w") as file:
           maze = generate_maze(21, 21)
-          maze = purify_maze(maze)
+        #   maze = purify_maze(maze)
           string = stringify_maze(maze)
           display_maze(maze)
           print(string)
