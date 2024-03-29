@@ -7,6 +7,8 @@ from colorama import init
 from colorama import Fore, Back, Style
 import matplotlib.pyplot as plt
 import numpy as np
+import heapq
+import copy
 
 ## Functions
 def printMaze(maze):
@@ -18,21 +20,10 @@ def printMaze(maze):
 				print(Fore.GREEN + str(maze[i][j]), end=" ")
 			else:
 				print(Fore.RED + str(maze[i][j]), end=" ")
+            # else: (maze[i][j] == 'x'):
+            #     print(Fore.BLUE + str(maze[i][j]), end=" ")
 			
 		print('\n')
-		
-def stringify_maze(maze):
-    out = "" 
-    for i in range(0, len(maze)):
-        for j in range(0, len(maze[0])):
-            if (maze[i][j] == 'u'):
-                out += "9 "
-            elif (maze[i][j] == 'c'):
-                out += "0 "
-            else:
-                out += "1 "
-        out += "\n"
-    return out
      
 def purify_maze(maze):
     for col in maze[len(maze) - 1]:
@@ -283,17 +274,109 @@ def generate_maze(width, height):
 	
     return maze
 
-for i in range(0, 1):
-     with open(f"maze{i}.txt", "w") as file:
-          maze = generate_maze(21, 21)
+# for i in range(0, 1):
+#      with open(f"maze{i}.txt", "w") as file:
+#           maze = generate_maze(21, 21)
         #   maze = purify_maze(maze)
-          string = stringify_maze(maze)
-          display_maze(maze)
-          print(string)
-          file.write(string)
+        #   display_maze(maze)
           
 
+def convert_maze_for_visualization(maze): #TODO: still broken
+    num_rows = len(maze)
+    num_cols = len(maze[0])
+    converted_maze = np.zeros((num_rows, num_cols), dtype=int)  # Initialize maze array with zeros
+    for i in range(num_rows):
+        for j in range(num_cols):
+            if maze[i][j] == 'w':
+                converted_maze[i][j] = 1  # Set walls to 1
+            elif maze[i][j] == 'c':
+                converted_maze[i][j] = 0  # Set clear spaces to 0
+            elif maze[i][j] == 's':
+                converted_maze[i][j] = 2  # Set start cell to 2
+            elif maze[i][j] == 'f':
+                converted_maze[i][j] = 3  # Set finish cell to 3
+    return converted_maze
 
-# maze = generate_maze(101, 101)
-# printMaze(maze)
-# displayMaze(maze)
+def heuristic(start, goal):
+    # Manhattan distance heuristic
+    return abs(start[0] - goal[0]) + abs(start[1] - goal[1])
+
+def astar(maze, start, goal):
+    # Define the dimensions of the maze
+    rows = len(maze)
+    cols = len(maze[0])
+
+    # Define movement directions (up, down, left, right)
+    directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+
+    open_set = []
+
+    heapq.heappush(open_set, (0, start))
+    came_from = {}
+    g_score = {start: 0}
+
+    path = []
+    
+    while open_set:
+        _, current = heapq.heappop(open_set)
+        
+        if current == goal:
+            while current in came_from:
+                path.append(current)
+                current = came_from[current]
+            path.append(start)
+            path.reverse()
+            
+            # Mark the path in the maze
+            for cell in path:
+                maze[cell[0]][cell[1]] = 'p'
+            
+            # return path[::-1]
+        
+        for direction in directions:
+            dx, dy = direction
+            neighbor = (current[0] + dx, current[1] + dy)
+            
+            if 0 <= neighbor[0] < rows and 0 <= neighbor[1] < cols and maze[neighbor[0]][neighbor[1]] in ['c', 'f']:
+                tentative_g_score = g_score[current] + 1
+                if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
+                    came_from[neighbor] = current
+                    g_score[neighbor] = tentative_g_score
+                    f_score = tentative_g_score + heuristic(neighbor, goal)
+                    heapq.heappush(open_set, (f_score, neighbor))
+    return path
+
+def mark_path_on_maze(maze, path):
+    marked_mazes = [np.copy(maze)]  # Store the original maze as the first element
+    for i in range(1, len(path)):
+        maze_copy = np.copy(maze)  # Create a copy of the original maze
+        for x, y in path[:i]:  # Mark the path up to the current step
+            maze_copy[x][y] = 'p'  # Mark the path with 'p'
+        marked_mazes.append(maze_copy)  # Add the marked maze to the list
+    return marked_mazes
+
+def visualize_mazes(mazes):
+    plt.figure(figsize=(len(mazes) * 2, 2))
+    for i, maze in enumerate(mazes):
+        plt.subplot(1, len(mazes), i + 1)
+        plt.imshow(maze, cmap='binary', interpolation='nearest')
+        plt.xticks([])
+        plt.yticks([])
+    plt.show()
+
+WIDTH = 10
+HEIGHT = 10
+start = (0, 1)
+goal = (HEIGHT - 1, WIDTH - 2)
+# Find the shortest path using A*
+maze = generate_maze(WIDTH, HEIGHT)
+path = astar(maze, start, goal)
+maze_list = mark_path_on_maze(maze, path)
+print(maze_list)
+# # print(maze_list)
+# for i, marked_maze in enumerate(maze_list):
+#     print(f"Step {i}:")
+#     print(marked_maze)
+#     print()
+
+visualize_mazes([convert_maze_for_visualization(maze) for maze in maze_list])
