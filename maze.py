@@ -281,7 +281,7 @@ def generate_maze(width, height):
         #   display_maze(maze)
           
 
-def convert_maze_for_visualization(maze): #TODO: still broken
+def convert_maze_for_visualization(maze):
     num_rows = len(maze)
     num_cols = len(maze[0])
     converted_maze = np.zeros((num_rows, num_cols), dtype=int)  # Initialize maze array with zeros
@@ -295,6 +295,8 @@ def convert_maze_for_visualization(maze): #TODO: still broken
                 converted_maze[i][j] = 2  # Set start cell to 2
             elif maze[i][j] == 'f':
                 converted_maze[i][j] = 3  # Set finish cell to 3
+            elif maze[i][j] == 'p':
+                converted_maze[i][j] = 4  # Set path cell to 4
     return converted_maze
 
 def heuristic(start, goal):
@@ -350,7 +352,7 @@ def mark_path_on_maze(maze, path):
     marked_mazes = [np.copy(maze)]  # Store the original maze as the first element
     for i in range(1, len(path)):
         maze_copy = np.copy(maze)  # Create a copy of the original maze
-        for x, y in path[:i]:  # Mark the path up to the current step
+        for x, y in path[:i+1]:  # Mark the path up to and including the current step
             maze_copy[x][y] = 'p'  # Mark the path with 'p'
         marked_mazes.append(maze_copy)  # Add the marked maze to the list
     return marked_mazes
