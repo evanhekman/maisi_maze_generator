@@ -38,7 +38,9 @@ def generate_maze(width, height):
     # Randomize the start and end points on the boundary
     # Ensure start and end are on different boundaries if chosen from top/bottom or left/right
     sides = ['top', 'right', 'bottom', 'left']
-    start_side, end_side = random.sample(sides, 2)  # Choose two distinct sides
+    anakin_skywalker = random.randint(0, 3)
+    start_side = sides[anakin_skywalker]  # Choose two distinct sides
+    end_side = sides[(anakin_skywalker + 2) % 4]
 
     # Start point
     if start_side == 'top':
@@ -161,11 +163,9 @@ def save_maze_and_solutions(maze, path):
     maze[path[0][0]][path[0][1]] = 3
     maze[path[len(path) - 1][0]][path[len(path) - 1][1]] = 5
     path = path[::-1]
-    print(len(path))
     for i in range(1, len(path) - 2):
         if random.randint(0, 100) == 36:
             path_ = (path[i], path[i + 1])
-            print(path_)
             # Save the maze grid
             with open(f"mazes/maze{maze_number}_iteration_{i}.txt", "w") as file:
                 og0 = maze[path_[0][0]][path_[0][1]]
