@@ -157,14 +157,23 @@ def visualize_maze_with_path(maze, start, end, path):
     plt.show()
     
 def save_maze_and_solution(maze, path):
+    path = path[::-1]
     print(len(path))
-    for i in range(0, len(path) - 1):
+    for i in range(0, len(path) - 2):
         path_ = (path[i], path[i + 1])
+        print(path_)
         # Save the maze grid
-        with open(f"mazes/maze_iteration_{i}", "w") as file:
+        with open(f"mazes/maze_iteration_{i}.txt", "w") as file:
+            og0 = maze[path_[0][0]][path_[0][1]]
+            og1 = maze[path_[1][0]][path_[1][1]]
+            maze[path_[0][0]][path_[0][1]] = 2
+            maze[path_[1][0]][path_[1][1]] = 3
             for row in maze:
                 file.write(''.join(str(cell) for cell in row) + "\n")
             file.write("\n")
+
+            maze[path_[0][0]][path_[0][1]] = og0
+            maze[path_[1][0]][path_[1][1]] = og1
 
             # Calculate moves from the path_
             moves = []
