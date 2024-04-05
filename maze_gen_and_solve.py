@@ -168,7 +168,7 @@ def save_maze_and_solutions(maze, path):
         if random.randint(0, 100) == 36:
             path_ = (path[i], path[i + 1])
             # Save the maze grid
-            with open(f"mazes/large_maze{maze_number}_iteration_{i}.txt", "w") as file:
+            with open(f"large_mazes/large_mazes{maze_number}_iteration_{i}.txt", "w") as file:
                 og0 = maze[path_[0][0]][path_[0][1]]
                 maze[path_[0][0]][path_[0][1]] = 4
                 for row in maze:
@@ -248,6 +248,7 @@ def adjust_path_for_maze(path):
 #     if "small" not in filename and "medium" not in filename and "large" not in filename:
 #         os.remove(f"mazes/{filename}")
 
+input("are you sure you want to pollute your dataset? ctrl-c to stop")
 for j in range(1000):
     width, height = 50, 50
     maze, start, end = generate_maze(width, height)
