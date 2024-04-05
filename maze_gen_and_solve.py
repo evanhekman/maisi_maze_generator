@@ -163,7 +163,7 @@ def visualize_maze_with_path(maze, start, end, path):
 def save_maze_and_solutions(maze, path):
     maze[path[0][0]][path[0][1]] = 3
     maze[path[len(path) - 1][0]][path[len(path) - 1][1]] = 5
-    path = path[::-1]
+    # path = path[::-1]
     for i in range(1, len(path) - 2):
         if random.randint(0, 100) == 36:
             path_ = (path[i], path[i + 1])
