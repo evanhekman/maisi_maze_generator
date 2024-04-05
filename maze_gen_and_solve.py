@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import ListedColormap, BoundaryNorm
 import sys
+import os
 
 sys.setrecursionlimit(10000)
 maze_number = 0
@@ -182,10 +183,10 @@ def save_maze_and_solutions(maze, path):
                     dx = path_[i][0] - path_[i-1][0]
                     dy = path_[i][1] - path_[i-1][1]
                     # print(dx, dy)
-                    if dx == 1: file.write("D\n")
-                    elif dx == -1: file.write("U\n")
-                    if dy == 1: file.write("R\n")
-                    elif dy == -1: file.write("L\n")
+                    if dx == 1: file.write("U\n")
+                    elif dx == -1: file.write("D\n")
+                    if dy == 1: file.write("L\n")
+                    elif dy == -1: file.write("R\n")
                 
                 # Save the solution moves
                 # file.write("".join(moves) + "\n")
@@ -240,6 +241,11 @@ def adjust_path_for_maze(path):
 # visualize_maze(maze, start, end)
 # path = find_path_dfs(maze, start, end)
 # path = dfs_search(maze, start, end)
+
+# clears maze folder
+for filename in os.listdir("mazes"):
+    os.remove(f"mazes/{filename}")
+
 for j in range(1000):
     width, height = 5, 5
     maze, start, end = generate_maze(width, height)
