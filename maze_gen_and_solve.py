@@ -5,6 +5,7 @@ from matplotlib.colors import ListedColormap, BoundaryNorm
 import sys
 
 sys.setrecursionlimit(10000)
+maze_number = 0
 
 def generate_maze(width, height):
     # Initialize the maze grid as a solid block (walls everywhere)
@@ -156,38 +157,38 @@ def visualize_maze_with_path(maze, start, end, path):
     plt.xticks([]), plt.yticks([])
     plt.show()
     
-def save_maze_and_solution(maze, path):
+def save_maze_and_solutions(maze, path):
+    maze[path[0][0]][path[0][1]] = 3
+    maze[path[len(path) - 1][0]][path[len(path) - 1][1]] = 5
     path = path[::-1]
     print(len(path))
-    for i in range(0, len(path) - 2):
-        path_ = (path[i], path[i + 1])
-        print(path_)
-        # Save the maze grid
-        with open(f"mazes/maze_iteration_{i}.txt", "w") as file:
-            og0 = maze[path_[0][0]][path_[0][1]]
-            og1 = maze[path_[1][0]][path_[1][1]]
-            maze[path_[0][0]][path_[0][1]] = 2
-            maze[path_[1][0]][path_[1][1]] = 3
-            for row in maze:
-                file.write(''.join(str(cell) for cell in row) + "\n")
-            file.write("\n")
+    for i in range(1, len(path) - 2):
+        if random.randint(0, 100) == 36:
+            path_ = (path[i], path[i + 1])
+            print(path_)
+            # Save the maze grid
+            with open(f"mazes/maze{maze_number}_iteration_{i}.txt", "w") as file:
+                og0 = maze[path_[0][0]][path_[0][1]]
+                maze[path_[0][0]][path_[0][1]] = 4
+                for row in maze:
+                    file.write(''.join(str(cell) for cell in row) + "\n")
+                file.write("\n")
 
-            maze[path_[0][0]][path_[0][1]] = og0
-            maze[path_[1][0]][path_[1][1]] = og1
+                maze[path_[0][0]][path_[0][1]] = og0
 
-            # Calculate moves from the path_
-            moves = []
-            for i in range(1, len(path_)):
-                dx = path_[i][0] - path_[i-1][0]
-                dy = path_[i][1] - path_[i-1][1]
-                # print(dx, dy)
-                if dx == 1: file.write("D\n")
-                elif dx == -1: file.write("U\n")
-                if dy == 1: file.write("R\n")
-                elif dy == -1: file.write("L\n")
-            
-            # Save the solution moves
-            # file.write("".join(moves) + "\n")
+                # Calculate moves from the path_
+                moves = []
+                for i in range(1, len(path_)):
+                    dx = path_[i][0] - path_[i-1][0]
+                    dy = path_[i][1] - path_[i-1][1]
+                    # print(dx, dy)
+                    if dx == 1: file.write("D\n")
+                    elif dx == -1: file.write("U\n")
+                    if dy == 1: file.write("R\n")
+                    elif dy == -1: file.write("L\n")
+                
+                # Save the solution moves
+                # file.write("".join(moves) + "\n")
 
 from queue import PriorityQueue
 
@@ -236,12 +237,14 @@ def adjust_path_for_maze(path):
         adjusted_path.append((point[0]*2+1, point[1]*2+1))
     return adjusted_path
 
-width, height = 10, 10
-maze, start, end = generate_maze(width, height)
 # visualize_maze(maze, start, end)
 # path = find_path_dfs(maze, start, end)
 # path = dfs_search(maze, start, end)
-path = a_star_search(maze, (start[0], start[1]), (end[0], end[1]))
-# adjusted_path = adjust_path_for_maze(path)
-visualize_maze_with_path(maze, start, end, path)
-save_maze_and_solution(maze, path)
+for j in range(1000):
+    width, height = 5, 5
+    maze, start, end = generate_maze(width, height)
+    maze_number = j
+    path = a_star_search(maze, (start[0], start[1]), (end[0], end[1]))
+    save_maze_and_solutions(maze, path)
+    # visualize_maze_with_path(maze, start, end, path)
+
