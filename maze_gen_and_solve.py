@@ -183,10 +183,10 @@ def save_maze_and_solutions(maze, path):
                     dx = path_[i][0] - path_[i-1][0]
                     dy = path_[i][1] - path_[i-1][1]
                     # print(dx, dy)
-                    if dx == 1: file.write("U\n")
-                    elif dx == -1: file.write("D\n")
-                    if dy == 1: file.write("L\n")
-                    elif dy == -1: file.write("R\n")
+                    if dx == 1: file.write("D\n")
+                    elif dx == -1: file.write("U\n")
+                    if dy == 1: file.write("R\n")
+                    elif dy == -1: file.write("L\n")
                 
                 # Save the solution moves
                 # file.write("".join(moves) + "\n")
