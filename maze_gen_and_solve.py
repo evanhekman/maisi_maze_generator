@@ -132,7 +132,7 @@ def dfs_search(maze, start, end):
         visited.add((x, y))
         if (x, y) == end:
             return path
-        for dx, dy in [(0, 2), (2, 0), (0, -2), (-2, 0)]:  # Move 2 cells at a time
+        for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:  # Move 1 cells at a time
             nx, ny = x + dx, y + dy
             if 0 <= nx < len(maze) and 0 <= ny < len(maze[0]) and maze[nx][ny] == 0:
                 stack.append(((nx, ny), path + [(nx, ny)]))
@@ -156,28 +156,29 @@ def visualize_maze_with_path(maze, start, end, path):
     plt.xticks([]), plt.yticks([])
     plt.show()
     
-def save_maze_and_solution(maze, path, filename="maze_and_solution.txt"):
-    # Save the maze grid
-    with open(filename, "w") as file:
-        for row in maze:
-            file.write(''.join(str(cell) for cell in row) + "\n")
-        file.write("\n")
+def save_maze_and_solution(maze, path):
+    print(len(path))
+    for i in range(0, len(path) - 1):
+        path_ = (path[i], path[i + 1])
+        # Save the maze grid
+        with open(f"mazes/maze_iteration_{i}", "w") as file:
+            for row in maze:
+                file.write(''.join(str(cell) for cell in row) + "\n")
+            file.write("\n")
 
-        # Calculate moves from the path
-        moves = []
-        for i in range(1, len(path)):
-            dx = path[i][0] - path[i-1][0]
-            dy = path[i][1] - path[i-1][1]
-            # print(dx, dy)
-            if dx == 1: file.write("D\n")
-            elif dx == -1: file.write("U\n")
-            if dy == 1: file.write("R\n")
-            elif dy == -1: file.write("L\n")
-        
-        # Save the solution moves
-        # file.write("".join(moves) + "\n")
-
-    return filename
+            # Calculate moves from the path_
+            moves = []
+            for i in range(1, len(path_)):
+                dx = path_[i][0] - path_[i-1][0]
+                dy = path_[i][1] - path_[i-1][1]
+                # print(dx, dy)
+                if dx == 1: file.write("D\n")
+                elif dx == -1: file.write("U\n")
+                if dy == 1: file.write("R\n")
+                elif dy == -1: file.write("L\n")
+            
+            # Save the solution moves
+            # file.write("".join(moves) + "\n")
 
 from queue import PriorityQueue
 
@@ -226,7 +227,7 @@ def adjust_path_for_maze(path):
         adjusted_path.append((point[0]*2+1, point[1]*2+1))
     return adjusted_path
 
-width, height = 50, 50
+width, height = 10, 10
 maze, start, end = generate_maze(width, height)
 # visualize_maze(maze, start, end)
 # path = find_path_dfs(maze, start, end)
