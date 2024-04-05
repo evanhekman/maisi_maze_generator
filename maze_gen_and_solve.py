@@ -168,7 +168,7 @@ def save_maze_and_solutions(maze, path):
         if random.randint(0, 100) == 36:
             path_ = (path[i], path[i + 1])
             # Save the maze grid
-            with open(f"mazes/maze{maze_number}_iteration_{i}.txt", "w") as file:
+            with open(f"mazes/small_maze{maze_number}_iteration_{i}.txt", "w") as file:
                 og0 = maze[path_[0][0]][path_[0][1]]
                 maze[path_[0][0]][path_[0][1]] = 4
                 for row in maze:
@@ -190,6 +190,7 @@ def save_maze_and_solutions(maze, path):
                 
                 # Save the solution moves
                 # file.write("".join(moves) + "\n")
+            break
 
 from queue import PriorityQueue
 
