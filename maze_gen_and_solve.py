@@ -249,11 +249,11 @@ def adjust_path_for_maze(path):
 #         os.remove(f"mazes/{filename}")
 
 input("are you sure you want to pollute your dataset? ctrl-c to stop")
-for j in range(1000):
+for j in range(4):
     width, height = 50, 50
     maze, start, end = generate_maze(width, height)
     maze_number = j
     path = a_star_search(maze, (start[0], start[1]), (end[0], end[1]))
-    save_maze_and_solutions(maze, path)
-    # visualize_maze_with_path(maze, start, end, path)
+    # save_maze_and_solutions(maze, path)
+    visualize_maze_with_path(maze, start, end, path)
 
