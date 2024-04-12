@@ -310,21 +310,16 @@ def adjust_path_for_maze(path):
         adjusted_path.append((point[0]*2+1, point[1]*2+1))
     return adjusted_path
 
-# visualize_maze(maze, start, end)
-# path = find_path_dfs(maze, start, end)
-# path = dfs_search(maze, start, end)
+# for n in range(1000):
+#     width, height = 5, 5
+#     maze, start, end = generate_maze(width, height)
+#     path = a_star_search(maze, (start[0], start[1]), (end[0], end[1]))
+#     dataset = generate_dataset(maze, path)
+#     # visualize_maze_with_path(maze, start, end, path)
 
-# clears maze folder
-# for filename in os.listdir("mazes"):
-#     if "small" not in filename and "medium" not in filename and "large" not in filename:
-#         os.remove(f"mazes/{filename}")
-
-# if __name__=="main":
-# for j in range(4):
-for n in range(1000):
-    width, height = 5, 5
-    maze, start, end = generate_maze(width, height)
-    path = a_star_search(maze, (start[0], start[1]), (end[0], end[1]))
-    dataset = generate_dataset(maze, path)
-    export_dataset("dataset_of_1000_small", dataset, n)
-    # visualize_maze_with_path(maze, start, end, path)
+def smart_generate(num, folder_name, width=5, height=5):
+    for i in range(num):
+        maze, start, end = generate_maze(width, height)
+        path = a_star_search(maze, (start[0], start[1]), (end[0], end[1]))
+        dataset = generate_dataset(maze, path)
+        export_dataset(folder_name, dataset, num)
